@@ -1,0 +1,231 @@
+@model IEnumerable<Book>
+
+@{
+    ViewData["Title"] = "Моя полиця.";
+}
+
+<style>
+    .shelf-title { color: var(--accent-gold); font-weight: bold; margin-bottom: 2rem; }
+    .book-card { background-color: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 1.5rem; height: 100%; transition: 0.2s; position: relative;}
+    .book-card:hover { transform: translateY(-3px); border-color: var(--accent-gold); }
+    .book-title { color: var(--text-main); font-size: 1.2rem; font-weight: 600; margin-bottom: 0.2rem; }
+    .book-author { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1rem; }
+
+    /* Прогрес-бар */
+    .progress-container { margin-top: auto; margin-bottom: 1rem; }
+    .progress-text { color: var(--text-muted); font-size: 0.8rem; display: flex; justify-content: space-between; margin-bottom: 0.3rem; }
+    .progress { height: 6px; background-color: var(--border-color); border-radius: 3px; overflow: hidden; }
+    .progress-bar { background-color: var(--accent-gold); border-radius: 3px; transition: width 0.4s ease; }
+
+    /* Кнопка статусу (badge) */
+    .status-badge { position: absolute; top: 1.5rem; right: 1.5rem; font-size: 0.7rem; padding: 4px 8px; border-radius: 20px;}
+    .status-reading { background-color: rgba(201, 160, 113, 0.1); color: var(--accent-gold); border: 1px solid var(--accent-gold); }
+    .status-wanna { background-color: #232830; color: var(--text-muted); }
+    .status-finished { background-color: #198754; color: white; }
+
+    /* Швидкі дії */
+    .quick-update { display: flex; gap: 5px; margin-bottom: 1rem;}
+    .quick-input { background-color: var(--bg-dark); border: 1px solid var(--border-color); color: white; border-radius: 4px; padding: 2px 8px; font-size: 0.8rem; width: 60px;}
+    .quick-btn { background-color: var(--accent-gold); color: var(--bg-dark); border: none; border-radius: 4px; font-size: 0.8rem; padding: 2px 8px; cursor: pointer;}
+
+    .cover-wrapper {
+        background: #000;
+        border-radius: 8px;
+        overflow: hidden;
+        border: 1px solid var(--border-color);
+    }
+    .no-image {
+        height: 250px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--text-muted);
+        font-size: 0.8rem;
+    }
+</style>
+
+<div class="container">
+    <div class="row pt-4"><div class="col-12 text-center"><h1 class="shelf-title">Шеф. Трекер.</h1></div></div>
+
+    <div class="d-flex justify-content-center gap-3 mb-5">
+        <div class="stats-bubble">
+            <span class="num">@ViewBag.Reading</span> читаю
+        </div>
+        <div class="stats-bubble">
+            <span class="num">@ViewBag.Finished</span> завершено
+        </div>
+        <div class="stats-bubble">
+            <span class="num">@ViewBag.Total</span> всього
+        </div>
+    </div>
+            <span class="stats-label">всього</span>
+        </div>
+    </div>
+
+    <style>
+        .stats-bubble {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            padding: 8px 20px;
+            border-radius: 50px;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+        .stats-bubble .num {
+            color: var(--accent-gold);
+            font-weight: bold;
+            margin-right: 5px;
+        }
+    </style>
+
+    <div class="row mb-4 align-items-center">
+        <div class="col-md-8">
+            <form asp-action="Index" method="get" class="d-flex gap-2">
+                <input type="text" name="searchString" class="form-control" 
+                       placeholder="Знайти книгу або автора..." 
+                       style="background: var(--card-bg); color: white; border: 1px solid var(--border-color); border-radius: 10px;">
+                <button type="submit" class="btn btn-gold"><i class="bi bi-search"></i></button>
+            </form>
+        </div>
+    </div>
+
+    <div class="d-flex flex-wrap gap-2 mb-4 justify-content-center">
+        <a asp-action="Index" asp-route-categoryId="" 
+           class="btn rounded-pill px-4 fw-bold @(ViewBag.CurrentCategoryId == null ? "btn-gold" : "btn-outline-secondary")">
+            Всі книги
+        </a>
+
+        @foreach(var category in ViewBag.CategoryList)
+        {
+            <a asp-action="Index" asp-route-categoryId="@category.Id" 
+               class="btn rounded-pill px-4 fw-bold @(ViewBag.CurrentCategoryId == category.Id ? "btn-gold" : "btn-outline-secondary")">
+                @category.Name
+            </a>
+        }
+    </div>
+
+    <style>
+        /* Робимо неактивні кнопки більш стильними */
+        .btn-outline-secondary {
+            color: var(--text-muted);
+            border-color: #333;
+        }
+        .btn-outline-secondary:hover {
+            color: white;
+            background-color: #333;
+            border-color: #444;
+        }
+    </style>
+
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+        @foreach (var obj in Model)
+        {
+            string statusClass = obj.Status == "Читаю" ? "status-reading" : (obj.Status == "Завершено" ? "status-finished" : "status-wanna");
+
+            <div class="col book-item" data-status="@obj.Status">
+                <div class="book-card d-flex flex-column">
+                    <a asp-action="Details" asp-route-id="@obj.Id" class="text-decoration-none">
+                        <div class="cover-wrapper mb-3">
+                            @if (!string.IsNullOrEmpty(obj.ImageUrl)) {
+                                <img src="@obj.ImageUrl" class="img-fluid rounded" style="height: 250px; width: 100%; object-fit: cover;" />
+                            } else {
+                                <div class="no-image">Немає обкладинки</div>
+                            }
+                        </div>
+                    </a>
+
+                    <span class="status-badge @statusClass">@obj.Status.ToUpper()</span>
+
+                    <a asp-action="Details" asp-route-id="@obj.Id" class="text-decoration-none">
+                        <div class="book-title">@obj.Title</div>
+                    </a>
+                    <div class="book-author">@obj.Author</div>
+
+                    <div class="book-rating mb-2" style="font-size: 0.85rem;">
+                        @if (obj.Rating > 0)
+                        {
+                            <span style="color: var(--accent-gold);">
+                                @for (int i = 0; i < obj.Rating; i++)
+                                {
+                                    <i class="bi bi-star-fill"></i>
+                                }
+                                @for (int i = obj.Rating; i < 5; i++)
+                                {
+                                    <i class="bi bi-star"></i>
+                                }
+                            </span>
+                        }
+                        else
+                        {
+                            <span class="text-muted" style="font-size: 0.75rem;"><i>Не оцінено</i></span>
+                        }
+                    </div>
+                    
+                    @if(obj.Status != "Завершено")
+                    {
+                        <form asp-controller="Books" asp-action="QuickUpdate" method="post" class="quick-update">
+                            <input type="hidden" name="id" value="@obj.Id" />
+                            <input type="number" name="pagesReadToday" class="quick-input" placeholder="0" min="1" required />
+                            <button type="submit" class="quick-btn">Оновити</button>
+                        </form>
+                    }
+
+                    <div class="progress-container">
+                        <div class="progress-text">
+                            <span>@obj.ReadPages / @obj.TotalPages стор.</span>
+                            <span>@obj.ProgressPercent%</span>
+                        </div>
+                        <div class="progress" style="height: 8px; background-color: #1a1d23; border-radius: 10px;">
+                            <div class="progress-bar" role="progressbar" 
+                                 style="width: @obj.ProgressPercent%; background-color: var(--accent-gold); transition: 0.6s ease;" 
+                                 aria-valuenow="@obj.ProgressPercent" aria-valuemin="0" aria-valuemax="100">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row g-1 mt-auto">
+                        <div class="col-12">
+                            <form asp-action="UpdateStatus" method="post" class="w-100">
+                                <input type="hidden" name="id" value="@obj.Id" />
+                                <input type="hidden" name="newStatus" value="Завершено" />
+                                <button type="submit" class="btn-action-custom btn-complete-gold w-100">
+                                    <i class="bi bi-check2-all"></i> Завершити
+                                </button>
+                            </form>
+                        </div>
+                        
+                        <div class="col-6">
+                            <a asp-action="Edit" asp-route-id="@obj.Id" class="btn-action-custom btn-edit-orange w-100">
+                                <i class="bi bi-pencil-square"></i>
+                            </a>
+                        </div>
+                        
+                        <div class="col-6">
+                            <a asp-action="Delete" asp-route-id="@obj.Id" class="btn-action-custom btn-delete-red w-100">
+                                <i class="bi bi-trash3"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<script>
+    function filterBooks(status) {
+        // Змінюємо активну кнопку
+        document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+        event.target.classList.add('active');
+
+        // Фільтруємо картки
+        document.querySelectorAll('.book-item').forEach(card => {
+            const cardStatus = card.getAttribute('data-status');
+            if (status === 'all' || cardStatus === status) {
+                card.style.display = 'block';
+            } else {
+                card.style.display = 'none';
+            }
+        });
+    }
+</script>

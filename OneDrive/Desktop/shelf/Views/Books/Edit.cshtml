@@ -1,0 +1,88 @@
+@model Book
+
+<div class="container mt-4 mb-5">
+    <form method="post" enctype="multipart/form-data">
+        <input asp-for="Id" hidden />
+        <input asp-for="ImageUrl" hidden />
+        <input asp-for="ApplicationUserId" hidden />
+
+        <div class="row">
+            <div class="col-md-8">
+                <h2 style="color: var(--accent-gold);">Редагувати: @Model.Title</h2>
+                <hr style="border-color: var(--border-color);" />
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="Title" style="color: var(--text-muted)"></label>
+                        <input asp-for="Title" class="form-control bg-dark text-white border-secondary" />
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="Author" style="color: var(--text-muted)"></label>
+                        <input asp-for="Author" class="form-control bg-dark text-white border-secondary" />
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="TotalPages" style="color: var(--text-muted)">Всього сторінок</label>
+                        <input asp-for="TotalPages" class="form-control bg-dark text-white border-secondary" />
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="ReadPages" style="color: var(--text-muted)">Прочитано сторінок</label>
+                        <input asp-for="ReadPages" class="form-control bg-dark text-white border-secondary" />
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Description" style="color: var(--text-muted)">Анотація</label>
+                    <textarea asp-for="Description" rows="4" class="form-control bg-dark text-white border-secondary"></textarea>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label asp-for="Status" style="color: var(--text-muted)">Статус</label>
+                        <select asp-for="Status" class="form-select bg-dark text-white border-secondary">
+                            <option value="Хочу прочитати">Хочу прочитати</option>
+                            <option value="Читаю">Читаю</option>
+                            <option value="Завершено">Завершено</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label asp-for="Rating" style="color: var(--text-muted)">Оцінка</label>
+                        <select asp-for="Rating" class="form-select bg-dark text-white border-secondary">
+                            <option value="0">Не оцінено</option>
+                            <option value="1">⭐ 1 - Шляпа</option>
+                            <option value="2">⭐⭐ 2 - Ну таке</option>
+                            <option value="3">⭐⭐⭐ 3 - Норма</option>
+                            <option value="4">⭐⭐⭐⭐ 4 - Добре</option>
+                            <option value="5">⭐⭐⭐⭐⭐ 5 - Шедевр!</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label asp-for="CategoryId" style="color: var(--text-muted)">Жанр</label>
+                        <select asp-for="CategoryId" asp-items="@ViewBag.CategoryList" class="form-select bg-dark text-white border-secondary">
+                        </select>
+                    </div>
+                </div>
+
+                <div class="mt-4 d-flex gap-2">
+                    <button type="submit" class="btn btn-gold w-50">Зберегти зміни</button>
+                    <a asp-action="Index" class="btn btn-outline-secondary w-50">Скасувати</a>
+                </div>
+            </div>
+
+            <div class="col-md-4 text-center">
+                <label style="color: var(--text-muted)">Поточна обкладинка</label>
+                <div class="mt-2">
+                    @if (!string.IsNullOrEmpty(Model.ImageUrl)) {
+                        <img src="@Model.ImageUrl" class="rounded w-100 shadow-lg border border-secondary" style="max-height: 450px; object-fit: cover;" />
+                    } else {
+                        <div class="bg-dark border border-secondary rounded d-flex align-items-center justify-content-center" style="height: 350px; color: var(--text-muted);">
+                            Немає фото
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

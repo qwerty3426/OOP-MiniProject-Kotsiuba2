@@ -1,0 +1,124 @@
+@model Book
+
+<div class="container border p-3 mt-4" style="background-color: var(--card-bg); border-color: var(--border-color) !important; border-radius: 15px;">
+    <form method="post" enctype="multipart/form-data">
+        <div class="mb-4 p-4 rounded-4 shadow-sm" style="background: var(--bg-dark); border: 1px dashed var(--accent-gold);">
+            <label class="text-white mb-2 fw-bold"><i class="bi bi-magic" style="color: var(--accent-gold);"></i> Автозаповнення книги (Google API)</label>
+            <div class="input-group">
+                <input type="text" id="magicSearchInput" class="form-control bg-dark text-white border-secondary" placeholder="Введи назву (напр. 'Гаррі Поттер філософський камінь')">
+                <button type="button" class="btn btn-gold fw-bold" id="magicSearchBtn">
+                    <i class="bi bi-search"></i> Знайти
+                </button>
+            </div>
+            <div id="magicStatus" class="mt-2" style="font-size: 0.85rem;"></div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label asp-for="Title" style="color: var(--text-muted)">Назва книги</label>
+                <input asp-for="Title" class="form-control" style="background-color: var(--bg-dark); color: white; border-color: var(--border-color);" />
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label asp-for="Author" style="color: var(--text-muted)">Автор</label>
+                <input asp-for="Author" class="form-control" style="background-color: var(--bg-dark); color: white; border-color: var(--border-color);" />
+                <span asp-validation-for="Author" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="CategoryId" style="color: var(--text-muted)">Жанр</label>
+            <select asp-for="CategoryId" asp-items="@ViewBag.CategoryList" class="form-select bg-dark text-white border-secondary">
+                <option disabled selected>-- Виберіть жанр --</option>
+            </select>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label asp-for="TotalPages" style="color: var(--text-muted)">Скільки всього сторінок?</label>
+                <input asp-for="TotalPages" class="form-control" style="background-color: var(--bg-dark); color: white; border-color: var(--border-color);" />
+                <span asp-validation-for="TotalPages" class="text-danger"></span>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label asp-for="Year" style="color: var(--text-muted)"></label>
+                <input asp-for="Year" class="form-control" style="background-color: var(--bg-dark); color: white; border-color: var(--border-color);" />
+                <span asp-validation-for="Year" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Description" class="ms-2" style="color: var(--text-muted)"></label>
+            <textarea asp-for="Description" class="form-control" rows="4" 
+                      style="background-color: var(--bg-dark); color: white; border: 1px solid var(--border-color);"></textarea>
+            <span asp-validation-for="Description" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label style="color: var(--text-muted)">Обкладинка книги</label>
+            <input type="file" name="file" class="form-control" style="background-color: var(--bg-dark); color: white; border-color: var(--border-color);" />
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="ImageUrl" class="text-muted">Посилання на обкладинку (URL)</label>
+            <input asp-for="ImageUrl" id="ImageUrl" class="form-control bg-dark text-white border-secondary" placeholder="Встав посилання або використай магічний пошук..." />
+        </div>
+
+        <div class="mt-4">
+            <button type="submit" class="btn btn-gold" style="width:150px">Додати</button>
+            <a asp-action="Index" class="btn btn-outline-secondary" style="width:150px">На базу</a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <script>
+        document.getElementById('magicSearchBtn').addEventListener('click', async function() {
+            const query = document.getElementById('magicSearchInput').value;
+            const status = document.getElementById('magicStatus');
+            
+            if(!query) {
+                status.innerHTML = '<span class="text-warning">Введи назву книги!</span>';
+                return;
+            }
+
+            status.innerHTML = '<span class="text-info"><i class="bi bi-hourglass-split"></i> Шукаю в базі Google... </span>';
+
+            try {
+                const response = await fetch(`https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(query)}`);
+                const data = await response.json();
+
+                // Якщо Google повернув помилку доступу (наприклад, ліміт запитів)
+                if (data.error) {
+                    status.innerHTML = `<span class="text-danger"><i class="bi bi-exclamation-triangle"></i> Google свариться: ${data.error.message}</span>`;
+                    return;
+                }
+
+                if(data.items && data.items.length > 0) {
+                    const book = data.items[0].volumeInfo;
+
+                    if(document.getElementById('Title')) document.getElementById('Title').value = book.title || '';
+                    if(document.getElementById('Author')) document.getElementById('Author').value = book.authors ? book.authors.join(', ') : '';
+                    
+                    const descField = document.getElementById('Description');
+                    if(descField) descField.value = book.description || 'Опис відсутній.';
+
+                    const imgField = document.getElementById('ImageUrl');
+                    if(imgField && book.imageLinks && book.imageLinks.thumbnail) {
+                        let imgUrl = book.imageLinks.thumbnail.replace('http:', 'https:').replace('&edge=curl', ''); 
+                        imgField.value = imgUrl;
+                    }
+
+                    status.innerHTML = '<span class="text-success fw-bold"><i class="bi bi-check-circle"></i> Знайдено!</span>';
+                } else {
+                    // Тепер воно покаже, якщо Google реально повернув 0 результатів
+                    status.innerHTML = `<span class="text-danger"><i class="bi bi-x-circle"></i> Google реально каже, що в нього 0 результатів для "${query}". Спробуй англійською!</span>`;
+                }
+            } catch(err) {
+                // Якщо блокує браузер або антивірус
+                status.innerHTML = `<span class="text-danger">Помилка мережі/браузера: ${err.message}</span>`;
+            }
+        });
+    </script>
+    
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

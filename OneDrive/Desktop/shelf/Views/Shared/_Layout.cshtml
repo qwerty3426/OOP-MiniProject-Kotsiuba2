@@ -1,0 +1,109 @@
+﻿<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Shelf.</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" />
+
+    <style>
+        :root {
+            --bg-dark: #090B10; /* Глибокий темний фон */
+            --card-bg: #111419; /* Трохи світліший для карток */
+            --text-main: #FFFFFF;
+            --text-muted: #8B8E94;
+            --accent-gold: #C9A071; /* Наш золотий акцент */
+            --border-color: #232830;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        /* Стилізуємо навігацію */
+        .navbar {
+            background-color: var(--bg-dark) !important;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .navbar-brand {
+            color: var(--accent-gold) !important;
+            font-weight: bold;
+            font-size: 1.5rem;
+        }
+        .nav-link {
+            color: var(--text-muted) !important;
+        }
+        .nav-link:hover {
+            color: var(--text-main) !important;
+        }
+
+        /* Гарні кнопки */
+        .btn-gold {
+            background-color: transparent;
+            border: 1px solid var(--accent-gold);
+            color: var(--accent-gold);
+        }
+        .btn-gold:hover {
+            background-color: var(--accent-gold);
+            color: var(--bg-dark);
+        }
+
+        /* Стилізуємо Toastr під наш дизайн */
+        #toast-container > .toast-success {
+            background-color: var(--accent-gold);
+            color: var(--bg-dark);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm box-shadow mb-3">
+            <div class="container-fluid container">
+                <a class="navbar-brand" asp-area="" asp-controller="Books" asp-action="Index">Shelf.</a>
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <ul class="navbar-nav flex-grow-1">
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Books" asp-action="Index">Моя полиця</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-white" asp-controller="Profile" asp-action="Index">
+                                <i class="bi bi-bar-chart-fill" style="color: var(--accent-gold);"></i> Статистика
+                            </a>
+                        </li>
+                    </ul>
+                    <a asp-controller="Books" asp-action="Create" class="btn btn-gold btn-sm px-3">
+                        + Додати книгу
+                    </a>
+                    <partial name="_LoginPartial" />
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+
+    @if (TempData["success"] != null)
+    {
+        <script>
+            toastr.options = { "progressBar": true, "positionClass": "toast-bottom-right" };
+            toastr.success('@TempData["success"]');
+        </script>
+    }
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

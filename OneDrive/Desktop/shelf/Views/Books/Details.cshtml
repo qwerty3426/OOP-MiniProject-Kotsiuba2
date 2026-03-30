@@ -1,0 +1,107 @@
+@model Book
+
+@{
+    ViewData["Title"] = "Про книгу: " + Model.Title;
+}
+
+<div class="container mt-5">
+    <a asp-action="Index" class="btn btn-outline-secondary mb-4 btn-sm">
+        <i class="bi bi-arrow-left"></i> На полицю
+    </a>
+
+    <div class="row g-5">
+        <div class="col-md-4 text-center">
+            @if (!string.IsNullOrEmpty(Model.ImageUrl)) {
+                <img src="@Model.ImageUrl" class="img-fluid rounded-4 shadow-lg mb-3" style="max-height: 450px; object-fit: cover;" />
+            } else {
+                <div class="d-flex align-items-center justify-content-center bg-dark rounded-4 mb-3" style="height: 450px; color: var(--text-muted); border: 1px solid var(--border-color);">
+                    Немає обкладинки
+                </div>
+            }
+            
+            <div class="d-flex gap-2 justify-content-center">
+                <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning w-100">
+                    <i class="bi bi-pencil-square"></i> Редагувати
+                </a>
+                <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-outline-danger w-100">
+                    <i class="bi bi-trash"></i> Видалити
+                </a>
+            </div>
+        </div>
+
+        <div class="col-md-8">
+            <div class="book-info-header p-4 rounded-4 mb-4" style="background: var(--card-bg); border: 1px solid var(--border-color);">
+                <h1 style="color: white; font-weight: bold;">@Model.Title</h1>
+                <h3 style="color: var(--accent-gold);">@Model.Author</h3>
+                <div class="mt-2" style="color: var(--accent-gold); font-size: 1.2rem;">
+                    @if (Model.Rating > 0)
+                    {
+                        @for (int i = 0; i < Model.Rating; i++) { <i class="bi bi-star-fill"></i> }
+                        @for (int i = Model.Rating; i < 5; i++) { <i class="bi bi-star"></i> }
+                    }
+                    else
+                    {
+                        <span class="text-muted fs-6">Не оцінено</span>
+                    }
+                </div>
+                <div class="mt-2 text-muted">Жанр: <span class="badge bg-secondary">@Model.Category?.Name</span></div>
+                <div class="mt-1 text-muted">Рік видання: @Model.Year</div>
+            </div>
+
+            <div class="book-description p-4 rounded-4" style="background: var(--card-bg); border: 1px solid var(--border-color);">
+                <h4 style="color: white; border-bottom: 2px solid var(--accent-gold); padding-bottom: 10px;" class="mb-3">
+                    Анотація / Опис
+                </h4>
+                
+                @if (!string.IsNullOrEmpty(Model.Description)) {
+                    <div style="color: var(--text-main); line-height: 1.8; font-size: 1.1rem; white-space: pre-wrap;">
+                        @Model.Description
+                    </div>
+                } else {
+                    <div class="text-muted italic">Опис книги поки що відсутній. Додайте його при редагуванні.</div>
+                }
+            </div>
+
+            <div class="notes-section mt-5">
+                <h3 style="color: var(--accent-gold); border-bottom: 2px solid #333; padding-bottom: 10px;" class="mb-4">
+                    <i class="bi bi-journal-text"></i> Читацький щоденник
+                </h3>
+
+                <div class="add-note-box p-3 rounded-4 mb-4" style="background: var(--bg-dark); border: 1px solid var(--border-color);">
+                    <form asp-action="AddNote" method="post">
+                        <input type="hidden" name="bookId" value="@Model.Id" />
+                        <div class="mb-2">
+                            <textarea name="text" class="form-control bg-dark text-white border-secondary" rows="3" placeholder="Збережи круту цитату або напиши свої думки про прочитане..." required></textarea>
+                        </div>
+                        <div class="text-end">
+                            <button type="submit" class="btn btn-gold btn-sm px-4">Додати запис</button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="notes-list">
+                    @if (Model.Notes != null && Model.Notes.Any())
+                    {
+                        @foreach (var note in Model.Notes)
+                        {
+                            <div class="note-card p-3 mb-3 rounded-3 shadow-sm" style="background: var(--card-bg); border-left: 4px solid var(--accent-gold);">
+                                <div class="text-muted mb-2" style="font-size: 0.8rem;">
+                                    <i class="bi bi-clock"></i> @note.CreatedAt.ToString("dd.MM.yyyy HH:mm")
+                                </div>
+                                <div style="color: white; white-space: pre-wrap; font-style: italic;">
+                                    "@note.Text"
+                                </div>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="text-center p-4 text-muted" style="border: 1px dashed var(--border-color); border-radius: 10px;">
+                            Поки що тут порожньо. Додай свою першу нотатку!
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,38 @@
+﻿@{
+    ViewData["Title"] = "Головна";
+}
+
+<div class="container text-center mt-5" style="min-height: 75vh; display: flex; flex-direction: column; justify-content: center;">
+
+    <h1 class="display-3 fw-bold mb-4" style="color: white;">
+        Твій ідеальний <span style="color: var(--accent-gold);">Shelf Tracker</span>
+    </h1>
+
+    <p class="lead mb-5" style="color: var(--text-muted); max-width: 600px; margin: 0 auto;">
+        Перетвори хаос у читанні на ідеальну цифрову полицю. Додавай книги, відстежуй прогрес у відсотках, зберігай анотації та став оцінки.
+    </p>
+
+    <div class="d-flex justify-content-center gap-3">
+        <a asp-area="Identity" asp-page="/Account/Register" class="btn btn-gold btn-lg px-5 py-3" style="font-weight: bold; font-size: 1.2rem; border-radius: 50px;">
+            <i class="bi bi-rocket-takeoff me-2"></i> Створити полицю
+        </a>
+        <a asp-area="Identity" asp-page="/Account/Login" class="btn btn-outline-light btn-lg px-5 py-3" style="border-radius: 50px;">
+            Увійти
+        </a>
+    </div>
+
+    <div class="row mt-5 pt-5 justify-content-center opacity-75">
+        <div class="col-md-3">
+            <h2 style="color: var(--accent-gold);">100%</h2>
+            <p style="color: var(--text-muted);">Контроль прогресу</p>
+        </div>
+        <div class="col-md-3">
+            <h2 style="color: var(--accent-gold);">0</h2>
+            <p style="color: var(--text-muted);">Загублених книг</p>
+        </div>
+        <div class="col-md-3">
+            <h2 style="color: var(--accent-gold);">24/7</h2>
+            <p style="color: var(--text-muted);">Доступ до полиці</p>
+        </div>
+    </div>
+</div>
