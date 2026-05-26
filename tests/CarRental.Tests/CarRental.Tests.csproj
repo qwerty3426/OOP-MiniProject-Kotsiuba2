@@ -21,6 +21,8 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\CarRental.Domain\CarRental.Domain.csproj" />
     <ProjectReference Include="..\..\src\CarRental.Application\CarRental.Application.csproj" />
+    <ProjectReference Include="..\..\src\CarRentalSystem.Domain\CarRentalSystem.Domain.csproj" />
+    <ProjectReference Include="..\..\src\CarRentalSystem.Application\CarRentalSystem.Application.csproj" />
   </ItemGroup>
 
 </Project>
