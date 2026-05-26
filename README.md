@@ -26,7 +26,3 @@
 [cite_start]Щоб запустити головний сценарій створення замовлення та переглянути вивід у консоль, виконайте[cite: 112, 116]:
 ```bash
 dotnet run --project src/CarRentalSystem.Console/CarRentalSystem.Console.csproj
-![alt text](image.png)
-### Запуск ТЕСТІВ 
-dotnet test
-![alt text](image-1.png)
