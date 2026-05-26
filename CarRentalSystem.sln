@@ -5,8 +5,6 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{827E0CD3-B72D-47B6-A68D-7590B98EB39B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CarRental.Tests", "tests\CarRental.Tests\CarRental.Tests.csproj", "{B2C33B05-1927-43F9-BDD1-3CF8756C780B}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CarRentalSystem.Domain", "src\CarRentalSystem.Domain\CarRentalSystem.Domain.csproj", "{653FC7EF-B2BC-468B-B9FD-3BF36F5FEC4F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CarRentalSystem.Application", "src\CarRentalSystem.Application\CarRentalSystem.Application.csproj", "{2B6E8533-5705-4C84-95FE-D190F386EC23}"
@@ -19,6 +17,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{0AB3BF05
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CarRentalSystem.Tests", "tests\CarRentalSystem.Tests\CarRentalSystem.Tests.csproj", "{E9AB83F6-1B55-4D7C-8D24-6ED8D2034735}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CarRental.Tests", "tests\CarRental.Tests\CarRental.Tests.csproj", "{AA0EE2C8-B340-42A2-A338-4955016F8C18}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -29,18 +29,6 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{B2C33B05-1927-43F9-BDD1-3CF8756C780B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B2C33B05-1927-43F9-BDD1-3CF8756C780B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B2C33B05-1927-43F9-BDD1-3CF8756C780B}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{B2C33B05-1927-43F9-BDD1-3CF8756C780B}.Debug|x64.Build.0 = Debug|Any CPU
-		{B2C33B05-1927-43F9-BDD1-3CF8756C780B}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{B2C33B05-1927-43F9-BDD1-3CF8756C780B}.Debug|x86.Build.0 = Debug|Any CPU
-		{B2C33B05-1927-43F9-BDD1-3CF8756C780B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B2C33B05-1927-43F9-BDD1-3CF8756C780B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B2C33B05-1927-43F9-BDD1-3CF8756C780B}.Release|x64.ActiveCfg = Release|Any CPU
-		{B2C33B05-1927-43F9-BDD1-3CF8756C780B}.Release|x64.Build.0 = Release|Any CPU
-		{B2C33B05-1927-43F9-BDD1-3CF8756C780B}.Release|x86.ActiveCfg = Release|Any CPU
-		{B2C33B05-1927-43F9-BDD1-3CF8756C780B}.Release|x86.Build.0 = Release|Any CPU
 		{653FC7EF-B2BC-468B-B9FD-3BF36F5FEC4F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{653FC7EF-B2BC-468B-B9FD-3BF36F5FEC4F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{653FC7EF-B2BC-468B-B9FD-3BF36F5FEC4F}.Debug|x64.ActiveCfg = Debug|Any CPU
@@ -101,16 +89,28 @@ Global
 		{E9AB83F6-1B55-4D7C-8D24-6ED8D2034735}.Release|x64.Build.0 = Release|Any CPU
 		{E9AB83F6-1B55-4D7C-8D24-6ED8D2034735}.Release|x86.ActiveCfg = Release|Any CPU
 		{E9AB83F6-1B55-4D7C-8D24-6ED8D2034735}.Release|x86.Build.0 = Release|Any CPU
+		{AA0EE2C8-B340-42A2-A338-4955016F8C18}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AA0EE2C8-B340-42A2-A338-4955016F8C18}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AA0EE2C8-B340-42A2-A338-4955016F8C18}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{AA0EE2C8-B340-42A2-A338-4955016F8C18}.Debug|x64.Build.0 = Debug|Any CPU
+		{AA0EE2C8-B340-42A2-A338-4955016F8C18}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{AA0EE2C8-B340-42A2-A338-4955016F8C18}.Debug|x86.Build.0 = Debug|Any CPU
+		{AA0EE2C8-B340-42A2-A338-4955016F8C18}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AA0EE2C8-B340-42A2-A338-4955016F8C18}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AA0EE2C8-B340-42A2-A338-4955016F8C18}.Release|x64.ActiveCfg = Release|Any CPU
+		{AA0EE2C8-B340-42A2-A338-4955016F8C18}.Release|x64.Build.0 = Release|Any CPU
+		{AA0EE2C8-B340-42A2-A338-4955016F8C18}.Release|x86.ActiveCfg = Release|Any CPU
+		{AA0EE2C8-B340-42A2-A338-4955016F8C18}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{B2C33B05-1927-43F9-BDD1-3CF8756C780B} = {827E0CD3-B72D-47B6-A68D-7590B98EB39B}
 		{653FC7EF-B2BC-468B-B9FD-3BF36F5FEC4F} = {827E0CD3-B72D-47B6-A68D-7590B98EB39B}
 		{2B6E8533-5705-4C84-95FE-D190F386EC23} = {827E0CD3-B72D-47B6-A68D-7590B98EB39B}
 		{FF3238B3-8F41-4CB9-B92A-DFC8DD71190C} = {827E0CD3-B72D-47B6-A68D-7590B98EB39B}
 		{78E01392-9E14-43E8-9B93-A0ABF972022E} = {827E0CD3-B72D-47B6-A68D-7590B98EB39B}
 		{E9AB83F6-1B55-4D7C-8D24-6ED8D2034735} = {0AB3BF05-4346-4AA6-1389-037BE0695223}
+		{AA0EE2C8-B340-42A2-A338-4955016F8C18} = {0AB3BF05-4346-4AA6-1389-037BE0695223}
 	EndGlobalSection
 EndGlobal
